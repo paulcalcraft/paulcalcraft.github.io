@@ -1,0 +1,33 @@
+<style>
+    body {
+        max-width: 600px;
+        margin: 20px auto;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+    
+</style>
+<h1>ByeTwitterBots</h1>
+<h2>Report and block the latest wave of twitter mention bots in one click.</h2>
+
+⚠️ I've only tested this myself so far! ⚠️<br><br>Please <a href="https://twitter.com/paul_cal">let me know</a> if this does/does not work for you.
+<br>
+<br>
+
+Drag the link below to your bookmarks bar:<br>
+<br>
+<a href="javascript:(function(){let e=&#34;a[href&#34;,t='[data-testid=&#34;';function n(e){return e.getAttribute(&#34;href&#34;).match(/^\/[a-zA-Z0-9_]+$/)}function a(e,t=document.body){if(&#34;string&#34;==typeof e){let n=e;e=()=>t.querySelector(n)}return new Promise((n=>{if(e())return n(e());let a=new MutationObserver((t=>{e()&&(a.disconnect(),n(e()))}));a.observe(t,{childList:!0,subtree:!0})}))}function r(e){return e.length&&e[0]}new Set;async function o(e){e.t.querySelector('[aria-haspopup=&#34;menu&#34;]').click();let n=await a(t+'report&#34;] span');n.click(),n=await a((()=>r(Array.from(document.querySelectorAll('[aria-modal=&#34;true&#34;] label span')).filter((e=>&#34;Spam&#34;==e.innerText.trim()))))),n.click(),n=await a(t+'ChoiceSelectionNextButton&#34;]'),n.click(),n=await a((()=>r(Array.from(document.querySelectorAll(&#34;[role=button] span&#34;)).filter((e=>e.innerText.trim().startsWith(&#34;Block&#34;)))))),n.click()}!async function(e){let t=e.filter((e=>e.o.length>4));for(let e of t){let t=e.i.getAttribute(&#34;href&#34;).match(/^\/([a-zA-Z0-9_]+)$/)[1];e.l=t,e.i.dispatchEvent(new MouseEvent(&#34;mouseover&#34;,{view:window,bubbles:!0,cancelable:!0}));let n=await a(`a[href^=&#34;/${t}/following&#34;]`),r=await a(`a[href^=&#34;/${t}/verified_followers&#34;]`),i=await a('[role=button][aria-label^=&#34;Follow&#34;]');e.u=i.innerText.trim().startsWith(&#34;Following&#34;),e.m=parseInt(r.innerText.replace(/[^0-9]/g,&#34;&#34;)),e.p=parseInt(n.innerText.replace(/[^0-9]/g,&#34;&#34;)),e.i.dispatchEvent(new MouseEvent(&#34;mouseout&#34;,{view:window,bubbles:!0,cancelable:!0})),await a((()=>!document.querySelector(`a[href^=&#34;/${t}/following&#34;]`))),e.m<100&&e.p<100&&!e.u&&await o(e)}}(Array.from(document.querySelectorAll(e+'*=&#34;/status/&#34;] time')).map((a=>{let r=function(e,t){if(e.matches(t))return e;for(;e.parentElement;){let n=e.parentElement;if(n.querySelector(t))return n;e=n}return null}(a,t+'tweetText&#34;]'),o=r.querySelector(t+'tweetText&#34;]');return{t:r,i:Array.from(r.querySelectorAll(e+'^=&#34;/&#34;]')).filter((e=>n(e)))[0],o:Array.from(o.querySelectorAll(e+'^=&#34;/&#34;]')).filter((e=>n(e))).map((e=>e.href))}})));})();">ByeTwitterBots</a>
+<br><br>
+(Clicking it on this page won't do anything).
+<br><br>
+If you're not sure how, <a href="https://support.start.me/hc/en-us/articles/200964881-Install-and-use-our-bookmarklet" target="_blank">this page on start.me explains it clearly</a> - but just drag the "ByeTwitterBots" link on this page instead of the image example they use.
+<br><br>
+When you're on the <a href="https://twitter.com/notifications">notifications</a> page, click the ByeTwitterBots "bookmarklet" in the bookmarks bar. It will report and block every tweet that meets all these criteria:
+<ul>
+    <li>Mentions more than 4 people</li>
+    <li>Is from an account that is following less than 100 people, and followed by less than 100 people</li>
+    <li>Is from an account that you do not follow</li>
+</ul>
+
+Happy blocking!
+
+Feedback to <a href="https://twitter.com/paul_cal">Paul Calcraft</a> on Twitter.
