@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learned Embeddings Demo</title>
+  <style>
+    
+    body { 
+      font-family: Arial, sans-serif;
+      font-size: 22px;
+      margin: 40px;
+    }
+    #controls { 
+      position: sticky;
+      top: 0;
+      background-color: white;
+      padding: 20px 0;
+      z-index: 1000;
+      text-align: center; /* Add this line to center the buttons */
+    }
+    #charts {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+    .chart-container {
+      width: 100%;
+      max-width: 1050px;
+      height: 400px;
+      margin-bottom: 35px;
+      position: relative;
+    }
+    @media (min-width: 1200px) {
+      .chart-container {
+        width: 45%;
+      }
+      #denseWeightChart {
+        width: 100%;
+      }
+    }
+    button {
+      font-size: inherit;
+    }
+    h1 {
+      font-size: 1.5em;
+    }
+    h1 small {
+      font-size: 0.5em;
+      font-weight: normal;
+    }
+    h2 {
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align: center;">Learned Embeddings Demo <small>v0.0.0.0.0.1, by <a href="https://x.com/paul_cal" target="_blank">@paul_cal</a></small></h1>
+    
+  <div style="max-width: 800px; margin: 0 auto;">
+    <p><strong>Neural net objective:</strong> Take 3 input values (integer tokens 0-4) and output the average value of the tokens.</p>
+    <p>Weights and embedding points are <strong>interactive</strong>. Drag them around to see how it affects the loss. <a href="#explanation" onclick="event.preventDefault(); document.querySelector('#explanation').scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'}); setTimeout(() => window.scrollBy(0, -document.getElementById('controls').offsetHeight), 800);">Scroll down ⬇️ for details</a></p>
+  </div>
+  
+  <div id="controls">
+    <button id="startButton">Start Training</button>
+    <button id="stopButton" disabled>Stop Training</button>
+    <button id="resetButton">Reset</button>
+    <button id="freezeEmbeddingsButton">Freeze Embeddings</button>
+    <button id="freezeDenseButton">Freeze Dense Layer</button>
+    <span id="lossDisplay" style="margin-left: 20px;">Loss: N/A</span>
+  </div>
+  
+  <div id="modelDefinitionContainer" style="display: none; max-width: 800px; margin: 20px auto;">
+    <pre style="white-space: pre-wrap; max-width: 100%;"><code style="white-space: pre-wrap; max-width: 100%;" class="language-javascript">const vocabSize = 5;
+const embedDim = 2;
+const seqLength = 3;
+const batchSize = 32;
+
+model = tf.sequential();
+model.add(tf.layers.embedding({inputDim: vocabSize, outputDim: embedDim, inputLength: seqLength}));
+model.add(tf.layers.flatten());
+model.add(tf.layers.dense({units: 1}));
+
+model.compile({
+  optimizer: tf.train.adam(0.01),
+  loss: 'meanSquaredError',
+});
+
+// Generate fixed dataset
+X = tf.randomUniform([batchSize, seqLength], 0, vocabSize, 'int32');
+Y = X.sum(1).div((vocabSize-1) * seqLength).expandDims(1); // Normalize sum to [0, 1] and add a dimension</code></pre>
+  </div>
+
+  
+  <div id="charts">
+    <div class="chart-container"><canvas id="embeddingChart"></canvas></div>
+    <div class="chart-container"><canvas id="denseWeightChart"></canvas></div>
+    <div class="chart-container"><canvas id="lossChart"></canvas></div>
+  </div>
+
+  
+  <div id="explanation" style="max-width: 800px; margin: 0 auto;">
+    <h2>Explanation</h2>
+    <p><strong>Neural net objective:</strong> Take 3 input values (integer tokens 0-4) and output the average value of the tokens.</p>
+<p><strong>Model:</strong> A two dimensional embedding is learned for each of the 5 tokens. A single dense layer of 6 weights is learned to transform the 3 concatenated/flattened embeddings into the target output (the average of the 3 inputs).</p>
+<p><strong>Example 1:</strong> (0,1,2) ➔ 1</p>
+<p><strong>Example 2:</strong> (4,3,2) ➔ 3</p>
+<p><strong>Exa</strong>... you know what averages are.</p>
+<h2>Questions</h2>
+<ol>
+    <li>How does the model solve this? Retry the training a few times to see if it always arrives at the same solution.</li>
+    <li>What's the easiest way to solve it with the fewest number of non-zero weights?</li>
+    <li>Can you define the rules or equations that define the sets of weights that correctly compute the average?</li>
+</ol>
+<p>You can:</p>
+<ul>
+    <li><strong>Start</strong>, <strong>pause</strong>, and <strong>resume</strong> training</li>
+    <li><strong>Drag</strong> embedding points and density weights in the graphs to change them</li>
+    <li><strong>Freeze</strong> either the embeddings or the dense layer, or both, to see how it affects training</li>
+</ul>
+
+<h2>Model Definition</h2>
+
+<div id="modelDefinitionContainer" style="max-width: 800px; margin: 20px auto; font-size: 0.8em;">
+  <pre style="white-space: pre-wrap; max-width: 100%;"><code style="white-space: pre-wrap; max-width: 100%;" class="language-javascript">const vocabSize = 5;
+const embedDim = 2;
+const seqLength = 3;
+const batchSize = 32;
+
+model = tf.sequential();
+model.add(tf.layers.embedding({inputDim: vocabSize, outputDim: embedDim, inputLength: seqLength}));
+model.add(tf.layers.flatten());
+model.add(tf.layers.dense({units: 1}));
+
+model.compile({
+  optimizer: tf.train.adam(0.01),
+  loss: 'meanSquaredError',
+});
+
+// Generate fixed dataset
+X = tf.randomUniform([batchSize, seqLength], 0, vocabSize, 'int32');
+Y = X.sum(1).div(seqLength).expandDims(1);</code></pre>
+</div>
+</div>
+  
+  <!-- Include Chart.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
+  <!-- Include Prism.js for syntax highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-javascript.min.js"></script>
+  
+  <!-- Main JavaScript -->
+  <script src="main.js"></script>
+  <script>
+    // Adjust Chart.js global font size
+    // Chart.defaults.font.size = 32;
+    // Model Definition Show/Hide functionality
+    // const showModelDefinitionButton = document.getElementById('showModelDefinitionButton');
+    // const hideModelDefinitionButton = document.getElementById('hideModelDefinitionButton');
+    // const modelDefinitionContainer = document.getElementById('modelDefinitionContainer');
+
+    // showModelDefinitionButton.addEventListener('click', () => {
+    //   modelDefinitionContainer.style.display = 'block';
+    //   showModelDefinitionButton.style.display = 'none';
+    //   hideModelDefinitionButton.style.display = 'inline-block';
+    //   Prism.highlightAll(); // Apply syntax highlighting
+    //   modelDefinitionContainer.scrollIntoView({ behavior: 'smooth' }); // Scroll to the model definition
+    // });
+
+    // hideModelDefinitionButton.addEventListener('click', () => {
+    //   modelDefinitionContainer.style.display = 'none';
+    //   showModelDefinitionButton.style.display = 'inline-block';
+    //   hideModelDefinitionButton.style.display = 'none';
+    // });
+  </script>
+</body>
+</html>
